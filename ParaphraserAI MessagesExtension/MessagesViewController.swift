@@ -10,9 +10,63 @@ import Messages
 
 class MessagesViewController: MSMessagesAppViewController {
     
+    private let topButton = UIButton(type: .system)
+    private let textView = UITextView()
+    private let copyButton = UIButton(type: .system)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        setupUI()
+    }
+    
+    private func setupUI() {
+        // Configure top button
+        topButton.setTitle("Show Message", for: .normal)
+        topButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        topButton.addTarget(self, action: #selector(topButtonTapped), for: .touchUpInside)
+        topButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(topButton)
+        
+        // Configure text view
+        textView.text = "hello"
+        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.isEditable = false
+        textView.isHidden = true
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(textView)
+        
+        // Configure copy button
+        copyButton.setTitle("Copy to Clipboard", for: .normal)
+        copyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        copyButton.addTarget(self, action: #selector(copyButtonTapped), for: .touchUpInside)
+        copyButton.isHidden = true
+        copyButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(copyButton)
+        
+        // Setup constraints
+        NSLayoutConstraint.activate([
+            topButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            topButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            textView.topAnchor.constraint(equalTo: topButton.bottomAnchor, constant: 20),
+            textView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            textView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            textView.heightAnchor.constraint(equalToConstant: 100),
+            
+            copyButton.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 10),
+            copyButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+    
+    @objc private func topButtonTapped() {
+        textView.isHidden = false
+        copyButton.isHidden = false
+    }
+    
+    @objc private func copyButtonTapped() {
+        UIPasteboard.general.string = textView.text
+        textView.isHidden = true
+        copyButton.isHidden = true
     }
     
     // MARK: - Conversation Handling
