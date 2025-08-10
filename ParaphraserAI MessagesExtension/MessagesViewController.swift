@@ -9,10 +9,8 @@ import UIKit
 import Messages
 
 class MessagesViewController: MSMessagesAppViewController {
-    
-    private let topButton = UIButton(type: .system)
     private let textView = UITextView()
-    private let copyButton = UIButton(type: .system)
+    private let submitButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,101 +18,49 @@ class MessagesViewController: MSMessagesAppViewController {
     }
     
     private func setupUI() {
-        // Configure top button
-        topButton.setTitle("Show Message", for: .normal)
-        topButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        topButton.addTarget(self, action: #selector(topButtonTapped), for: .touchUpInside)
-        topButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(topButton)
-        
-        // Configure text view
-        textView.text = "hello"
-        textView.font = UIFont.systemFont(ofSize: 16)
-        textView.isEditable = false
-        textView.isHidden = true
         textView.translatesAutoresizingMaskIntoConstraints = false
+        submitButton.translatesAutoresizingMaskIntoConstraints = false
+        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.layer.borderColor = UIColor.lightGray.cgColor
+        textView.layer.borderWidth = 1.0
+        textView.layer.cornerRadius = 8.0
+        submitButton.setTitle("Submit", for: .normal)
+        submitButton.backgroundColor = UIColor.systemBlue
+        submitButton.setTitleColor(.white, for: .normal)
+        submitButton.layer.cornerRadius = 8.0
+        submitButton.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
+
         view.addSubview(textView)
-        
-        // Configure copy button
-        copyButton.setTitle("Copy to Clipboard", for: .normal)
-        copyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        copyButton.addTarget(self, action: #selector(copyButtonTapped), for: .touchUpInside)
-        copyButton.isHidden = true
-        copyButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(copyButton)
-        
-        // Setup constraints
+        view.addSubview(submitButton)
+
         NSLayoutConstraint.activate([
-            topButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            topButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            textView.topAnchor.constraint(equalTo: topButton.bottomAnchor, constant: 20),
+            textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             textView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             textView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             textView.heightAnchor.constraint(equalToConstant: 100),
-            
-            copyButton.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 10),
-            copyButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+
+            submitButton.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 16),
+            submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            submitButton.widthAnchor.constraint(equalToConstant: 120),
+            submitButton.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
     
-    @objc private func topButtonTapped() {
-        textView.isHidden = false
-        copyButton.isHidden = false
+    @objc private func submitButtonTapped() {
+        guard let conversation = activeConversation else { return }
+        let text = textView.text ?? ""
+        textView.resignFirstResponder() // Dismiss the keyboard
+        conversation.insertText(text) { error in
+            if let error = error {
+                print("Error inserting text: \(error)")
+            } else {
+                DispatchQueue.main.async {
+                    self.textView.text = ""
+                }
+            }
+        }
     }
     
-    @objc private func copyButtonTapped() {
-        UIPasteboard.general.string = textView.text
-        textView.isHidden = true
-        copyButton.isHidden = true
-    }
-    
-    // MARK: - Conversation Handling
-    
-    override func willBecomeActive(with conversation: MSConversation) {
-        // Called when the extension is about to move from the inactive to active state.
-        // This will happen when the extension is about to present UI.
-        
-        // Use this method to configure the extension and restore previously stored state.
-    }
-    
-    override func didResignActive(with conversation: MSConversation) {
-        // Called when the extension is about to move from the active to inactive state.
-        // This will happen when the user dismisses the extension, changes to a different
-        // conversation or quits Messages.
-        
-        // Use this method to release shared resources, save user data, invalidate timers,
-        // and store enough state information to restore your extension to its current state
-        // in case it is terminated later.
-    }
-   
-    override func didReceive(_ message: MSMessage, conversation: MSConversation) {
-        // Called when a message arrives that was generated by another instance of this
-        // extension on a remote device.
-        
-        // Use this method to trigger UI updates in response to the message.
-    }
-    
-    override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
-        // Called when the user taps the send button.
-    }
-    
-    override func didCancelSending(_ message: MSMessage, conversation: MSConversation) {
-        // Called when the user deletes the message without sending it.
-    
-        // Use this to clean up state related to the deleted message.
-    }
-    
-    override func willTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
-        // Called before the extension transitions to a new presentation style.
-    
-        // Use this method to prepare for the change in presentation style.
-    }
-    
-    override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
-        // Called after the extension transitions to a new presentation style.
-    
-        // Use this method to finalize any behaviors associated with the change in presentation style.
-    }
+    // ...existing code...
 
 }
