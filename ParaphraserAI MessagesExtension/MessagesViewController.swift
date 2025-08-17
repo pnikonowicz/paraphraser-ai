@@ -8,84 +8,114 @@
 import UIKit
 import Messages
 
-class MessagesViewController: MSMessagesAppViewController {
+
+class MessagesViewController: MSMessagesAppViewController, StyleSelectionViewDelegate {
     private let textView = UITextView()
     private let submitButton = UIButton(type: .system)
     private let spinner = UIActivityIndicatorView(style: .medium)
+    private let styleSelectionView = ContextSelectionView()
+    private let paraphraseView = UIView()
     
     private var apiKey: String = ""
-        static func loadAPIKey() -> String {
-            guard let secretsURL = Bundle.main.url(forResource: "Secrets", withExtension: "json") else {
-                return ""
-            }
-            do {
-                let data = try Data(contentsOf: secretsURL)
-                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                   let key = json["API_KEY"] as? String {
-                    return key
-                }
-            } catch {
-                print("Error loading API key: \(error)")
-            }
+    private var selectedContext: String?
+
+    static func loadAPIKey() -> String {
+        guard let secretsURL = Bundle.main.url(forResource: "Secrets", withExtension: "json") else {
             return ""
         }
+        do {
+            let data = try Data(contentsOf: secretsURL)
+            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+               let key = json["API_KEY"] as? String {
+                return key
+            }
+        } catch {
+            print("Error loading API key: \(error)")
+        }
+        return ""
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        styleSelectionView.setup(parentView: self.view)
+        styleSelectionView.onButtonTapped = self
+        
+        setupParaphraseView()
+        
         apiKey = MessagesViewController.loadAPIKey()
         if apiKey.isEmpty {
             textView.text = "Error: API key not found. Please add your API key to Secrets.json."
             submitButton.isEnabled = false
         }
-    }
-    
-    private func setupUI() {
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        submitButton.translatesAutoresizingMaskIntoConstraints = false
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        
-        textView.font = UIFont.systemFont(ofSize: 16)
-        textView.layer.borderColor = UIColor.lightGray.cgColor
-        textView.layer.borderWidth = 1.0
-        textView.layer.cornerRadius = 8.0
-        
-        submitButton.setTitle("Submit", for: .normal)
-        submitButton.backgroundColor = UIColor.systemBlue
-        submitButton.setTitleColor(.white, for: .normal)
-        submitButton.layer.cornerRadius = 8.0
-        submitButton.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
 
-        spinner.hidesWhenStopped = true
-        
-        view.addSubview(textView)
-        view.addSubview(submitButton)
-        view.addSubview(spinner)
+        paraphraseView.isHidden = true
+        styleSelectionView.show()
+    }
+
+    func contextButtonClicked(_ view: ContextSelectionView, context style: String) {
+        selectedContext = style
+        showParaphraseView()
+    }
+
+    private func setupParaphraseView() {
+        // Configure textView
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.layer.cornerRadius = 8
+        textView.layer.borderWidth = 1
+        textView.layer.borderColor = UIColor.systemGray4.cgColor
+        textView.clipsToBounds = true
+        textView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+
+        // Configure submitButton
+        submitButton.translatesAutoresizingMaskIntoConstraints = false
+        submitButton.setTitle("Paraphrase", for: .normal)
+        submitButton.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
+        submitButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
+        // StackView for vertical layout
+        let stackView = UIStackView(arrangedSubviews: [textView, submitButton])
+        stackView.axis = .vertical
+        stackView.spacing = 12
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add stackView to paraphraseView
+        paraphraseView.translatesAutoresizingMaskIntoConstraints = false
+        paraphraseView.addSubview(stackView)
 
         NSLayoutConstraint.activate([
-            textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            textView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            textView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            textView.heightAnchor.constraint(equalToConstant: 100),
-
-            submitButton.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 16),
-            submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            submitButton.widthAnchor.constraint(equalToConstant: 120),
-            submitButton.heightAnchor.constraint(equalToConstant: 44),
-            
-            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            spinner.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 16)
+            stackView.topAnchor.constraint(equalTo: paraphraseView.topAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: paraphraseView.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: paraphraseView.trailingAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: paraphraseView.bottomAnchor, constant: -20)
         ])
+
+        // Add paraphraseView to main view if not already added
+        if paraphraseView.superview == nil {
+            view.addSubview(paraphraseView)
+            NSLayoutConstraint.activate([
+                paraphraseView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                paraphraseView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                paraphraseView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                paraphraseView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        }
     }
-    
+
+    private func showParaphraseView() {
+        styleSelectionView.hide()
+        paraphraseView.isHidden = false
+        textView.text = ""
+    }
+
     @objc private func submitButtonTapped() {
         guard let conversation = activeConversation else { return }
         let text = textView.text ?? ""
-        textView.resignFirstResponder() // Dismiss the keyboard
+        textView.resignFirstResponder()
         spinner.startAnimating()
         submitButton.isEnabled = false
 
-        sendToOpenAI(text: text) { [weak self] result in
+        sendToOpenAI(text: text, style: selectedContext) { [weak self] result in
             DispatchQueue.main.async {
                 self?.spinner.stopAnimating()
                 self?.submitButton.isEnabled = true
@@ -96,6 +126,7 @@ class MessagesViewController: MSMessagesAppViewController {
                             print("Error inserting text: \(error)")
                         } else {
                             self?.textView.text = ""
+                            self?.styleSelectionView.show()
                         }
                     }
                 case .failure(let error):
@@ -104,21 +135,21 @@ class MessagesViewController: MSMessagesAppViewController {
             }
         }
     }
-    
-    private func sendToOpenAI(text: String, completion: @escaping (Result<String, Error>) -> Void) {
+
+    private func sendToOpenAI(text: String, style: String?, completion: @escaping (Result<String, Error>) -> Void) {
         guard !apiKey.isEmpty else {
             completion(.failure(NSError(domain: "Gemini", code: 0, userInfo: [NSLocalizedDescriptionKey: "API key not found."])))
             return
         }
+        
         // Gemini API endpoint and model
         let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=\(apiKey)")!
-        let context = "Make this text succinct and more clear. Do not add too many words, just replace and fix grammar where appropriate. Try to maintain the original author's personality."
         let body: [String: Any] = [
             "contents": [
                 [
                     "role": "user",
                     "parts": [
-                        ["text": "\(context)\n\n\(text)"]
+                        ["text": "\(selectedContext)\n\n\(text)"]
                     ]
                 ]
             ]
