@@ -1,0 +1,4 @@
+- create settings that allows you to add api key for gemini
+- add back button to paraphraser state
+- use testflight to distribute app
+- print errror messges when using model over network
