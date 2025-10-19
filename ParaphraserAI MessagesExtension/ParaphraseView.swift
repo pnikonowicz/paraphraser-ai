@@ -1,7 +1,8 @@
 import UIKit
 
 class ParaphraseView: UIView {
-    private let whatTheyWantToSay = UITextView()
+    private let userMessageTextView = UITextView()
+    private let additionalContextTextView = UITextView()
     private let submitButton = UIButton(type: .system)
     private let spinner = UIActivityIndicatorView(style: .medium)
 
@@ -28,20 +29,33 @@ class ParaphraseView: UIView {
     private func setupParaphraseView() {
         backgroundColor = .clear
 
-        // Add a title label above the textView
-        let titleLabel = UILabel()
-        titleLabel.text = "What do you want to say"
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        titleLabel.textColor = .label
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        let userMessageTextLabel = UILabel()
+        userMessageTextLabel.text = "What do you want to say"
+        userMessageTextLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        userMessageTextLabel.textColor = .label
+        userMessageTextLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        whatTheyWantToSay.translatesAutoresizingMaskIntoConstraints = false
-        whatTheyWantToSay.font = UIFont.systemFont(ofSize: 16)
-        whatTheyWantToSay.layer.cornerRadius = 8
-        whatTheyWantToSay.layer.borderWidth = 1
-        whatTheyWantToSay.layer.borderColor = UIColor.systemGray4.cgColor
-        whatTheyWantToSay.clipsToBounds = true
-        whatTheyWantToSay.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        userMessageTextView.translatesAutoresizingMaskIntoConstraints = false
+        userMessageTextView.font = UIFont.systemFont(ofSize: 16)
+        userMessageTextView.layer.cornerRadius = 8
+        userMessageTextView.layer.borderWidth = 1
+        userMessageTextView.layer.borderColor = UIColor.systemGray4.cgColor
+        userMessageTextView.clipsToBounds = true
+        userMessageTextView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        let additionalContextLabel = UILabel()
+        additionalContextLabel.text = "Last thing they said"
+        additionalContextLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        additionalContextLabel.textColor = .label
+        additionalContextLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        additionalContextTextView.translatesAutoresizingMaskIntoConstraints = false
+        additionalContextTextView.font = UIFont.systemFont(ofSize: 16)
+        additionalContextTextView.layer.cornerRadius = 8
+        additionalContextTextView.layer.borderWidth = 1
+        additionalContextTextView.layer.borderColor = UIColor.systemGray4.cgColor
+        additionalContextTextView.clipsToBounds = true
+        additionalContextTextView.heightAnchor.constraint(equalToConstant: 80).isActive = true
 
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         submitButton.setTitle("Paraphrase", for: .normal)
@@ -51,7 +65,10 @@ class ParaphraseView: UIView {
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.hidesWhenStopped = true
 
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, whatTheyWantToSay, submitButton, spinner])
+        let stackView = UIStackView(arrangedSubviews: [
+            userMessageTextLabel, userMessageTextView,
+            additionalContextLabel, additionalContextTextView,
+            submitButton, spinner])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -66,25 +83,26 @@ class ParaphraseView: UIView {
     }
 
     @objc private func submitButtonTapped() {
-        let text = whatTheyWantToSay.text ?? ""
-        whatTheyWantToSay.resignFirstResponder()
+        let text = userMessageTextView.text ?? ""
+        let additionalContext = additionalContextTextView.text ?? ""
+        userMessageTextView.resignFirstResponder()
         setLoading(true)
-        sendToOpenAI(text: text, style: getContext?()) { result in
+        sendToOpenAI(text: text, additionalContext: additionalContext, style: getContext?()) { result in
             DispatchQueue.main.async {
                 self.setLoading(false)
 
                 switch result {
                 case .success(let paraphrased):
-                    self.whatTheyWantToSay.text = paraphrased
+                    self.userMessageTextView.text = paraphrased
                 case .failure(let error):
                     let responseString = (error as NSError).userInfo["response"] as? String ?? ""
-                    self.whatTheyWantToSay.text = "Error: \(error.localizedDescription)\n\nResponse: \(responseString)"
+                    self.userMessageTextView.text = "Error: \(error.localizedDescription)\n\nResponse: \(responseString)"
                 }
             }
         }
     }
 
-    private func sendToOpenAI(text: String, style: String?, completion: @escaping (Result<String, Error>) -> Void) {
+    private func sendToOpenAI(text: String, additionalContext: String, style: String?, completion: @escaping (Result<String, Error>) -> Void) {
         guard !apiKey.isEmpty else {
             completion(.failure(NSError(domain: "Gemini", code: 0, userInfo: [NSLocalizedDescriptionKey: "API key not found."])))
             return
@@ -95,7 +113,12 @@ class ParaphraseView: UIView {
                 [
                     "role": "user",
                     "parts": [
-                        ["text": "\(style ?? "")\n\n\(text)"]
+                        ["text": """
+Paraphrase the following text in the specified style. The last thing that the target person said is provided to help with the paraphrasing. Provide an answer that can be copied and pasted directly without any additional parsing. If the "last thing that was said" section is populated, then generate additional text in order to fill in the reply. 
+Style: \(style ?? "")
+Text: \(text)
+Last thing that was said: \(additionalContext)
+"""]
                     ]
                 ]
             ]
@@ -151,6 +174,6 @@ class ParaphraseView: UIView {
     }
 
     func resetText() {
-        whatTheyWantToSay.text = ""
+        userMessageTextView.text = ""
     }
 }
