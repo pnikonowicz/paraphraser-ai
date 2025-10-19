@@ -48,10 +48,7 @@ class MessagesViewController: MSMessagesAppViewController, StyleSelectionViewDel
         paraphraseView.isHidden = true
 
         apiKey = MessagesViewController.loadAPIKey()
-        paraphraseView.configure(apiKey: apiKey, getContext: { [weak self] in self?.selectedContext }, onSuccess: { [weak self] in
-            self?.paraphraseView.resetText()
-            self?.styleSelectionView.show()
-        })
+        paraphraseView.configure(apiKey: apiKey)
 
         if apiKey.isEmpty {
             let alert = UIAlertController(title: "API Key Error", message: "API key not found. Please add your API key to Secrets.json.", preferredStyle: .alert)
@@ -65,13 +62,7 @@ class MessagesViewController: MSMessagesAppViewController, StyleSelectionViewDel
     }
 
     func contextButtonClicked(_ view: ContextSelectionView, context style: String) {
-        selectedContext = style
-        showParaphraseView()
-    }
-
-    private func showParaphraseView() {
         styleSelectionView.hide()
-        paraphraseView.isHidden = false
-        paraphraseView.resetText()
+        paraphraseView.show(context: style)
     }
 }

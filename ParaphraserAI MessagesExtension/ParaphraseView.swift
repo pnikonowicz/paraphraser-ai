@@ -7,8 +7,7 @@ class ParaphraseView: UIView {
     private let spinner = UIActivityIndicatorView(style: .medium)
 
     private var apiKey: String = ""
-    private var getContext: (() -> String?)?
-    private var onSuccess: (() -> Void)?
+    private var style: String = ""
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -20,10 +19,8 @@ class ParaphraseView: UIView {
         setupParaphraseView()
     }
 
-    func configure(apiKey: String, getContext: @escaping () -> String?, onSuccess: @escaping () -> Void) {
+    func configure(apiKey: String) {
         self.apiKey = apiKey
-        self.getContext = getContext
-        self.onSuccess = onSuccess
     }
 
     private func setupParaphraseView() {
@@ -87,7 +84,7 @@ class ParaphraseView: UIView {
         let additionalContext = additionalContextTextView.text ?? ""
         userMessageTextView.resignFirstResponder()
         setLoading(true)
-        sendToOpenAI(text: text, additionalContext: additionalContext, style: getContext?()) { result in
+        sendToOpenAI(text: text, additionalContext: additionalContext, style: self.style) { result in
             DispatchQueue.main.async {
                 self.setLoading(false)
 
@@ -175,5 +172,11 @@ Last thing that was said: \(additionalContext)
 
     func resetText() {
         userMessageTextView.text = ""
+    }
+
+    func show(context style: String) {
+        self.isHidden = false
+        self.style = style
+        self.resetText()
     }
 }
