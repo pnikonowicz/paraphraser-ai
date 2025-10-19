@@ -48,7 +48,7 @@ class MessagesViewController: MSMessagesAppViewController, StyleSelectionViewDel
         paraphraseView.isHidden = true
 
         apiKey = MessagesViewController.loadAPIKey()
-        paraphraseView.configure(apiKey: apiKey)
+        paraphraseView.configure(apiKey: apiKey, onCopyToChatButtonClicked: self.copyToChatButtonClicked)
 
         if apiKey.isEmpty {
             let alert = UIAlertController(title: "API Key Error", message: "API key not found. Please add your API key to Secrets.json.", preferredStyle: .alert)
@@ -64,5 +64,18 @@ class MessagesViewController: MSMessagesAppViewController, StyleSelectionViewDel
     func contextButtonClicked(_ view: ContextSelectionView, context style: String) {
         styleSelectionView.hide()
         paraphraseView.show(context: style)
+    }
+
+    func copyToChatButtonClicked(_ view: ParaphraseView, context message: String) {
+        // Insert the paraphrased message directly into the iMessage input field
+        self.activeConversation?.insertText(message, completionHandler: { error in
+            if let error = error {
+            print("Error inserting message: \(error)")
+            }
+        })
+        
+        // close the controller. work is done.
+        self.dismiss()
+
     }
 }

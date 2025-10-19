@@ -8,6 +8,12 @@ class ParaphraseView: UIView {
 
     private var apiKey: String = ""
     private var style: String = ""
+    private var onCopyToChat: ((ParaphraseView, String) -> Void)?
+
+    func configure(apiKey: String, onCopyToChatButtonClicked: @escaping (ParaphraseView, String) -> Void) {
+        self.apiKey = apiKey
+        self.onCopyToChat = onCopyToChatButtonClicked
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -17,10 +23,6 @@ class ParaphraseView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupParaphraseView()
-    }
-
-    func configure(apiKey: String) {
-        self.apiKey = apiKey
     }
 
     private func setupParaphraseView() {
@@ -56,16 +58,29 @@ class ParaphraseView: UIView {
 
         paraPhraseSubmit.translatesAutoresizingMaskIntoConstraints = false
         paraPhraseSubmit.setTitle("Paraphrase", for: .normal)
-        paraPhraseSubmit.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
+        paraPhraseSubmit.addTarget(self, action: #selector(paraphraseTapped), for: .touchUpInside)
         paraPhraseSubmit.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
+        // add a submit button that says copy to chat
+        let copyToChatButton = UIButton(type: .system)
+        copyToChatButton.setTitle("Copy to Chat", for: .normal)
+        copyToChatButton.translatesAutoresizingMaskIntoConstraints = false
+        copyToChatButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        copyToChatButton.addTarget(self, action: #selector(copyToChatTapped), for: .touchUpInside)
 
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.hidesWhenStopped = true
 
+        // Create a horizontal stack for the submit and copy buttons
+        let buttonStack = UIStackView(arrangedSubviews: [paraPhraseSubmit, copyToChatButton])
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 12
+        buttonStack.distribution = .fillEqually
+
         let stackView = UIStackView(arrangedSubviews: [
             userMessageTextLabel, userMessageTextView,
             additionalContextLabel, additionalContextTextView,
-            paraPhraseSubmit, spinner])
+            buttonStack, spinner])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +94,12 @@ class ParaphraseView: UIView {
         ])
     }
 
-    @objc private func submitButtonTapped() {
+    @objc private func copyToChatTapped() {
+        let text = userMessageTextView.text ?? ""
+        onCopyToChat?(self, text)
+    }
+
+    @objc private func paraphraseTapped() {
         let text = userMessageTextView.text ?? ""
         let additionalContext = additionalContextTextView.text ?? ""
         userMessageTextView.resignFirstResponder()
