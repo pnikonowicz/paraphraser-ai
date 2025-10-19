@@ -3,7 +3,7 @@ import UIKit
 class ParaphraseView: UIView {
     private let userMessageTextView = UITextView()
     private let additionalContextTextView = UITextView()
-    private let submitButton = UIButton(type: .system)
+    private let paraPhraseSubmit = UIButton(type: .system)
     private let spinner = UIActivityIndicatorView(style: .medium)
 
     private var apiKey: String = ""
@@ -54,10 +54,10 @@ class ParaphraseView: UIView {
         additionalContextTextView.clipsToBounds = true
         additionalContextTextView.heightAnchor.constraint(equalToConstant: 80).isActive = true
 
-        submitButton.translatesAutoresizingMaskIntoConstraints = false
-        submitButton.setTitle("Paraphrase", for: .normal)
-        submitButton.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
-        submitButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        paraPhraseSubmit.translatesAutoresizingMaskIntoConstraints = false
+        paraPhraseSubmit.setTitle("Paraphrase", for: .normal)
+        paraPhraseSubmit.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
+        paraPhraseSubmit.heightAnchor.constraint(equalToConstant: 44).isActive = true
 
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.hidesWhenStopped = true
@@ -65,7 +65,7 @@ class ParaphraseView: UIView {
         let stackView = UIStackView(arrangedSubviews: [
             userMessageTextLabel, userMessageTextView,
             additionalContextLabel, additionalContextTextView,
-            submitButton, spinner])
+            paraPhraseSubmit, spinner])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -159,15 +159,15 @@ Last thing that was said: \(additionalContext)
     func setLoading(_ loading: Bool) {
         if loading {
             spinner.startAnimating()
-            submitButton.isEnabled = false
+            paraPhraseSubmit.isEnabled = false
         } else {
             spinner.stopAnimating()
-            submitButton.isEnabled = true
+            paraPhraseSubmit.isEnabled = true
         }
     }
 
     func setSubmitEnabled(_ enabled: Bool) {
-        submitButton.isEnabled = enabled
+        paraPhraseSubmit.isEnabled = enabled
     }
 
     func resetText() {
