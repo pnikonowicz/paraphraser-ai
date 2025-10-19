@@ -1,7 +1,7 @@
 import UIKit
 
 class ParaphraseView: UIView {
-    private let textView = UITextView()
+    private let whatTheyWantToSay = UITextView()
     private let submitButton = UIButton(type: .system)
     private let spinner = UIActivityIndicatorView(style: .medium)
 
@@ -28,13 +28,20 @@ class ParaphraseView: UIView {
     private func setupParaphraseView() {
         backgroundColor = .clear
 
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.font = UIFont.systemFont(ofSize: 16)
-        textView.layer.cornerRadius = 8
-        textView.layer.borderWidth = 1
-        textView.layer.borderColor = UIColor.systemGray4.cgColor
-        textView.clipsToBounds = true
-        textView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        // Add a title label above the textView
+        let titleLabel = UILabel()
+        titleLabel.text = "What do you want to say"
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        titleLabel.textColor = .label
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        whatTheyWantToSay.translatesAutoresizingMaskIntoConstraints = false
+        whatTheyWantToSay.font = UIFont.systemFont(ofSize: 16)
+        whatTheyWantToSay.layer.cornerRadius = 8
+        whatTheyWantToSay.layer.borderWidth = 1
+        whatTheyWantToSay.layer.borderColor = UIColor.systemGray4.cgColor
+        whatTheyWantToSay.clipsToBounds = true
+        whatTheyWantToSay.heightAnchor.constraint(equalToConstant: 80).isActive = true
 
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         submitButton.setTitle("Paraphrase", for: .normal)
@@ -44,7 +51,7 @@ class ParaphraseView: UIView {
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.hidesWhenStopped = true
 
-        let stackView = UIStackView(arrangedSubviews: [textView, submitButton, spinner])
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, whatTheyWantToSay, submitButton, spinner])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,8 +66,8 @@ class ParaphraseView: UIView {
     }
 
     @objc private func submitButtonTapped() {
-        let text = textView.text ?? ""
-        textView.resignFirstResponder()
+        let text = whatTheyWantToSay.text ?? ""
+        whatTheyWantToSay.resignFirstResponder()
         setLoading(true)
         sendToOpenAI(text: text, style: getContext?()) { result in
             DispatchQueue.main.async {
@@ -68,10 +75,10 @@ class ParaphraseView: UIView {
 
                 switch result {
                 case .success(let paraphrased):
-                    self.textView.text = paraphrased
+                    self.whatTheyWantToSay.text = paraphrased
                 case .failure(let error):
                     let responseString = (error as NSError).userInfo["response"] as? String ?? ""
-                    self.textView.text = "Error: \(error.localizedDescription)\n\nResponse: \(responseString)"
+                    self.whatTheyWantToSay.text = "Error: \(error.localizedDescription)\n\nResponse: \(responseString)"
                 }
             }
         }
@@ -144,6 +151,6 @@ class ParaphraseView: UIView {
     }
 
     func resetText() {
-        textView.text = ""
+        whatTheyWantToSay.text = ""
     }
 }
