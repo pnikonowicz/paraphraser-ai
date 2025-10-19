@@ -70,7 +70,8 @@ class ParaphraseView: UIView {
                 case .success(let paraphrased):
                     self.textView.text = paraphrased
                 case .failure(let error):
-                    self.textView.text = "Error: \(error.localizedDescription)"
+                    let responseString = (error as NSError).userInfo["response"] as? String ?? ""
+                    self.textView.text = "Error: \(error.localizedDescription)\n\nResponse: \(responseString)"
                 }
             }
         }
@@ -114,7 +115,11 @@ class ParaphraseView: UIView {
                    let text = parts.first?["text"] as? String {
                     completion(.success(text.trimmingCharacters(in: .whitespacesAndNewlines)))
                 } else {
-                    completion(.failure(NSError(domain: "Gemini", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])))
+                    let responseString = String(data: data, encoding: .utf8) ?? "Unable to decode response"
+                    completion(.failure(NSError(domain: "Gemini", code: 0, userInfo: [
+                        NSLocalizedDescriptionKey: "Invalid response",
+                        "response": responseString
+                    ])))
                 }
             } catch {
                 completion(.failure(error))
