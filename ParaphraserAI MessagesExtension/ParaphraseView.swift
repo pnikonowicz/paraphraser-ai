@@ -40,8 +40,7 @@ class ParaphraseView: UIView {
         userMessageTextView.layer.borderWidth = 1
         userMessageTextView.layer.borderColor = UIColor.systemGray4.cgColor
         userMessageTextView.clipsToBounds = true
-        userMessageTextView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
+
         let additionalContextLabel = UILabel()
         additionalContextLabel.text = "Last thing they said"
         additionalContextLabel.font = UIFont.boldSystemFont(ofSize: 16)
@@ -96,12 +95,20 @@ class ParaphraseView: UIView {
         clearButton.setContentHuggingPriority(.required, for: .horizontal)
         clearButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
+        // Allow the userMessageTextView to expand vertically to take up remaining space
+        userMessageTextView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        userMessageTextView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+
         let stackView = UIStackView(arrangedSubviews: [
             labelAndClearStack, userMessageTextView,
             buttonStack, spinner])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .fill
+
+        // Make userMessageTextView expand to fill available space
+        userMessageTextView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80).isActive = true
 
         addSubview(stackView)
         NSLayoutConstraint.activate([
