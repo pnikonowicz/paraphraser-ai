@@ -68,6 +68,13 @@ class ParaphraseView: UIView {
         copyToChatButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         copyToChatButton.addTarget(self, action: #selector(copyToChatTapped), for: .touchUpInside)
 
+        // add a button that clears the userMessageTextView
+        let clearButton = UIButton(type: .system)
+        clearButton.setTitle("Clear", for: .normal)
+        clearButton.translatesAutoresizingMaskIntoConstraints = false
+        clearButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        clearButton.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
+
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.hidesWhenStopped = true
 
@@ -77,8 +84,20 @@ class ParaphraseView: UIView {
         buttonStack.spacing = 12
         buttonStack.distribution = .fillEqually
 
+        // Create a horizontal stack for the clearButton and messageTextLabel with the clearButton float to the right
+        let labelAndClearStack = UIStackView(arrangedSubviews: [userMessageTextLabel, clearButton])
+        labelAndClearStack.axis = .horizontal
+        labelAndClearStack.spacing = 8
+        labelAndClearStack.alignment = .center
+        labelAndClearStack.distribution = .fill
+
+        // Add a constraint to push the clearButton to the right
+        userMessageTextLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        clearButton.setContentHuggingPriority(.required, for: .horizontal)
+        clearButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+
         let stackView = UIStackView(arrangedSubviews: [
-            userMessageTextLabel, userMessageTextView,
+            labelAndClearStack, userMessageTextView,
             buttonStack, spinner])
         stackView.axis = .vertical
         stackView.spacing = 12
@@ -96,6 +115,10 @@ class ParaphraseView: UIView {
     @objc private func copyToChatTapped() {
         let text = userMessageTextView.text ?? ""
         onCopyToChat?(self, text)
+    }
+
+    @objc private func clearTapped() {
+        userMessageTextView.text = ""
     }
 
     @objc private func paraphraseTapped() {
