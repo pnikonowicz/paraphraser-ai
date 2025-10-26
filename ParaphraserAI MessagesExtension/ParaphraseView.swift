@@ -79,7 +79,6 @@ class ParaphraseView: UIView {
 
         let stackView = UIStackView(arrangedSubviews: [
             userMessageTextLabel, userMessageTextView,
-            additionalContextLabel, additionalContextTextView,
             buttonStack, spinner])
         stackView.axis = .vertical
         stackView.spacing = 12
