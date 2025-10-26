@@ -1,20 +1,17 @@
 import UIKit
 
-protocol StyleSelectionViewDelegate: AnyObject {
-    func contextButtonClicked(_ view: ContextSelectionView, context style: String)
-}
-
 class ContextSelectionView : UIView {
-
 
     private let grammarButton = UIButton(type: .system)
     private let shakespeareButton = UIButton(type: .system)
     private let pirateButton = UIButton(type: .system)
     private let styleSelectionView = UIView()
 
-    weak var onButtonTapped: StyleSelectionViewDelegate?
+    var onContextSelected: ((String) -> Void)?
 
-    func setup(parentView: UIView) {
+    func setup(parentView: UIView, onContextSelected: @escaping (String) -> Void) {
+        self.onContextSelected = onContextSelected
+
         styleSelectionView.translatesAutoresizingMaskIntoConstraints = false
         grammarButton.translatesAutoresizingMaskIntoConstraints = false
         shakespeareButton.translatesAutoresizingMaskIntoConstraints = false
@@ -73,7 +70,7 @@ class ContextSelectionView : UIView {
         default:
             context = "Make this text succinct and more clear. Do not add too many words, just replace and fix grammar where appropriate. Try to maintain the original author's personality."
         }
-        onButtonTapped?.contextButtonClicked(self, context: context)
+        onContextSelected?(context)
     }
 
     func show() {

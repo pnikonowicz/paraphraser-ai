@@ -228,4 +228,8 @@ Last thing that was said: \(additionalContext)
         self.style = style
         self.resetText()
     }
+
+    func hide() {
+        self.isHidden = true
+    }
 }

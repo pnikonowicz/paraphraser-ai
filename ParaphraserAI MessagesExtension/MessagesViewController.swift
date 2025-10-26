@@ -9,7 +9,7 @@ import UIKit
 import Messages
 
 
-class MessagesViewController: MSMessagesAppViewController, StyleSelectionViewDelegate {
+class MessagesViewController: MSMessagesAppViewController {
     private let styleSelectionView = ContextSelectionView()
     private let paraphraseView = ParaphraseView()
     
@@ -34,8 +34,7 @@ class MessagesViewController: MSMessagesAppViewController, StyleSelectionViewDel
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        styleSelectionView.setup(parentView: self.view)
-        styleSelectionView.onButtonTapped = self
+        styleSelectionView.setup(parentView: self.view, onContextSelected: self.showTheParaphraseView)
         
         paraphraseView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(paraphraseView)
@@ -58,12 +57,47 @@ class MessagesViewController: MSMessagesAppViewController, StyleSelectionViewDel
             paraphraseView.setSubmitEnabled(false)
         }
 
+        // Add swipe gesture to paraphraseView to handle right swipe
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.showTheStyleSelectionView))
+        swipeRight.direction = .right
+        self.paraphraseView.addGestureRecognizer(swipeRight)
+
         styleSelectionView.show()
     }
 
-    func contextButtonClicked(_ view: ContextSelectionView, context style: String) {
-        styleSelectionView.hide()
-        paraphraseView.show(context: style)
+    func showTheParaphraseView(context style: String) {
+        // Animate styleSelectionView sliding out to the left
+        // Prepare paraphraseView for animation
+        self.paraphraseView.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)
+        self.paraphraseView.show(context: style)
+
+        UIView.animate(withDuration: 0.3, animations: {
+            self.styleSelectionView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
+            self.styleSelectionView.alpha = 0
+            self.paraphraseView.transform = .identity
+        }, completion: { _ in
+            self.styleSelectionView.hide()
+            self.styleSelectionView.transform = .identity
+            self.styleSelectionView.alpha = 1
+        })
+    }
+
+    @objc func showTheStyleSelectionView() {
+        // Animate paraphraseView sliding out to the right
+        // Prepare styleSelectionView for animation
+        self.styleSelectionView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
+        self.styleSelectionView.isHidden = false
+
+        UIView.animate(withDuration: 0.3, animations: {
+            self.paraphraseView.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)
+            self.paraphraseView.alpha = 0
+            self.styleSelectionView.transform = .identity
+        }, completion: { _ in
+            self.paraphraseView.hide()
+            self.paraphraseView.transform = .identity
+            self.paraphraseView.alpha = 1
+            self.styleSelectionView.show()
+        })
     }
 
     func copyToChatButtonClicked(_ view: ParaphraseView, context message: String) {
