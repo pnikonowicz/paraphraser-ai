@@ -1,3 +1,3 @@
 - create settings that allows you to add api key for gemini
-- add back button to paraphraser state
 - use testflight to distribute app
+- fix swip right back animation so that it fades like the forward animation does
