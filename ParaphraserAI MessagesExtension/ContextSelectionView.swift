@@ -7,9 +7,9 @@ class ContextSelectionView : UIView {
     private let pirateButton = UIButton(type: .system)
     private let styleSelectionView = UIView()
 
-    var onContextSelected: ((String) -> Void)?
+    var onContextSelected: ((String, String) -> Void)?
 
-    func setup(parentView: UIView, onContextSelected: @escaping (String) -> Void) {
+    func setup(parentView: UIView, onContextSelected: @escaping (String, String) -> Void) {
         self.onContextSelected = onContextSelected
 
         styleSelectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -60,17 +60,22 @@ class ContextSelectionView : UIView {
 
     @objc private func styleButtonTapped(_ sender: UIButton) {
         var context = ""
+        var title = ""
         switch sender {
         case grammarButton:
             context = "Make this text succinct and more clear. Do not add too many words, just replace and fix grammar where appropriate. Try to maintain the original author's personality."
+            title = "Grammar"
         case shakespeareButton:
             context = "Rewrite this text in the style of a Shakespearean poet. Use poetic and old English language."
+            title = "Shakespeare Poet"
         case pirateButton:
             context = "Rewrite this text as if spoken by a pirate. Use pirate slang and style."
+            title = "Pirate"
         default:
             context = "Make this text succinct and more clear. Do not add too many words, just replace and fix grammar where appropriate. Try to maintain the original author's personality."
+            title = "Grammar"
         }
-        onContextSelected?(context)
+        onContextSelected?(context, title)
     }
 
     func show() {

@@ -2,11 +2,13 @@ import UIKit
 
 class ParaphraseView: UIView {
     private let userMessageTextView = UITextView()
+    private let contextSummaryTextLabel = UILabel()
     private let paraPhraseSubmit = UIButton(type: .system)
     private let spinner = UIActivityIndicatorView(style: .medium)
 
     private var apiKey: String = ""
     private var style: String = ""
+    private var title: String = ""
     private var onCopyToChat: ((ParaphraseView, String) -> Void)?
 
     func configure(apiKey: String, onCopyToChatButtonClicked: @escaping (ParaphraseView, String) -> Void) {
@@ -48,10 +50,9 @@ class ParaphraseView: UIView {
         userMessageTextView.clipsToBounds = true
         addBorder(view: userMessageTextView, color: UIColor.systemGray4)
         
-        let contextSummaryTextLabel = UILabel()
         contextSummaryTextLabel.text = "[context summary will appear here]"
-        contextSummaryTextLabel.font = UIFont(name: "Times New Roman", size: 12) ?? UIFont.systemFont(ofSize: 12)
-        contextSummaryTextLabel.textColor = .label
+        contextSummaryTextLabel.font = UIFont(name: "TimesNewRomanPS-ItalicMT", size: 12) ?? UIFont.systemFont(ofSize: 12)
+        contextSummaryTextLabel.textColor = .darkGray
         contextSummaryTextLabel.translatesAutoresizingMaskIntoConstraints = false
         contextSummaryTextLabel.textAlignment = .center
 
@@ -227,11 +228,13 @@ Text: \(text)
 
     func resetText() {
         userMessageTextView.text = ""
+        contextSummaryTextLabel.text = title
     }
 
-    func show(context style: String) {
+    func show(style: String, title: String) {
         self.isHidden = false
         self.style = style
+        self.title = title
         self.resetText()
     }
 

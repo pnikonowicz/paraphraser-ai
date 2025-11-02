@@ -65,9 +65,9 @@ class MessagesViewController: MSMessagesAppViewController {
         styleSelectionView.show()
     }
 
-    func animateTheParaphraseView(context style: String) {
-            self.styleSelectionView.hide()
-            self.paraphraseView.show(context: style)
+    func animateTheParaphraseView(style: String, title: String) {
+        self.styleSelectionView.hide()
+        self.paraphraseView.show(style: style, title: title)
     }
 
     @objc func animateTheStyleSelectionView() {
