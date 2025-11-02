@@ -1,3 +1,2 @@
 - create settings that allows you to add api key for gemini
 - use testflight to distribute app
-- fix swip right back animation so that it fades like the forward animation does

@@ -34,7 +34,7 @@ class MessagesViewController: MSMessagesAppViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        styleSelectionView.setup(parentView: self.view, onContextSelected: self.showTheParaphraseView)
+        styleSelectionView.setup(parentView: self.view, onContextSelected: self.animateTheParaphraseView)
         
         paraphraseView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(paraphraseView)
@@ -58,36 +58,19 @@ class MessagesViewController: MSMessagesAppViewController {
         }
 
         // Add swipe gesture to paraphraseView to handle right swipe
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.showTheStyleSelectionView))
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.animateTheStyleSelectionView))
         swipeRight.direction = .right
         self.paraphraseView.addGestureRecognizer(swipeRight)
 
         styleSelectionView.show()
     }
 
-    func showTheParaphraseView(context style: String) {
-        // Animate styleSelectionView sliding out to the left
-        // Prepare paraphraseView for animation
-        self.paraphraseView.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)
-        self.paraphraseView.show(context: style)
-
-        UIView.animate(withDuration: 0.3, animations: {
-            self.styleSelectionView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
-            self.styleSelectionView.alpha = 0
-            self.paraphraseView.transform = .identity
-        }, completion: { _ in
+    func animateTheParaphraseView(context style: String) {
             self.styleSelectionView.hide()
-            self.styleSelectionView.transform = .identity
-            self.styleSelectionView.alpha = 1
-        })
+            self.paraphraseView.show(context: style)
     }
 
-    @objc func showTheStyleSelectionView() {
-        // Animate paraphraseView sliding out to the right
-        // Prepare styleSelectionView for animation
-        self.styleSelectionView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
-        self.styleSelectionView.isHidden = false
-
+    @objc func animateTheStyleSelectionView() {
         UIView.animate(withDuration: 0.3, animations: {
             self.paraphraseView.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)
             self.paraphraseView.alpha = 0
