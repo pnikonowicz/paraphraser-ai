@@ -17,7 +17,7 @@ class MessagesViewController: MSMessagesAppViewController {
     private var selectedContext: String?
 
     static func loadAPIKey() -> String {
-        guard let secretsURL = Bundle.main.url(forResource: "Secrets", withExtension: "json") else {
+        guard let secretsURL = Bundle.main.url(forResource: "Secrets.json", withExtension: nil) else {
             return ""
         }
         do {
