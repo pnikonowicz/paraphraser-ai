@@ -6,21 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		6AAC101F2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6AAC101E2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		6AAC10242E3FB7FD002F4B72 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AAC10232E3FB7FD002F4B72 /* Messages.framework */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		6AAC10202E3FB7FD002F4B72 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6AAC100F2E3FB7FB002F4B72 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6AAC101D2E3FB7FD002F4B72;
-			remoteInfo = "ParaphraserAI MessagesExtension";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		6AAC10342E3FB7FE002F4B72 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -28,7 +13,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				6AAC101F2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -37,41 +21,16 @@
 
 /* Begin PBXFileReference section */
 		6AAC10152E3FB7FB002F4B72 /* ParaphraserAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ParaphraserAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6AAC101E2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ParaphraserAI MessagesExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AAC10232E3FB7FD002F4B72 /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		6AAC102E2E3FB7FE002F4B72 /* Exceptions for "ParaphraserAI MessagesExtension" folder in "ParaphraserAI MessagesExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 6AAC101D2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6AAC10252E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				6AAC102E2E3FB7FE002F4B72 /* Exceptions for "ParaphraserAI MessagesExtension" folder in "ParaphraserAI MessagesExtension" target */,
-			);
 			path = "ParaphraserAI MessagesExtension";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		6AAC101B2E3FB7FD002F4B72 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6AAC10242E3FB7FD002F4B72 /* Messages.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		6AAC100E2E3FB7FB002F4B72 = {
@@ -87,7 +46,6 @@
 			isa = PBXGroup;
 			children = (
 				6AAC10152E3FB7FB002F4B72 /* ParaphraserAI.app */,
-				6AAC101E2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,7 +71,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				6AAC10212E3FB7FD002F4B72 /* PBXTargetDependency */,
 			);
 			name = ParaphraserAI;
 			packageProductDependencies = (
@@ -121,28 +78,6 @@
 			productName = ParaphraserAI;
 			productReference = 6AAC10152E3FB7FB002F4B72 /* ParaphraserAI.app */;
 			productType = "com.apple.product-type.application.messages";
-		};
-		6AAC101D2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6AAC102F2E3FB7FE002F4B72 /* Build configuration list for PBXNativeTarget "ParaphraserAI MessagesExtension" */;
-			buildPhases = (
-				6AAC101A2E3FB7FD002F4B72 /* Sources */,
-				6AAC101B2E3FB7FD002F4B72 /* Frameworks */,
-				6AAC101C2E3FB7FD002F4B72 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				6AAC10252E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension */,
-			);
-			name = "ParaphraserAI MessagesExtension";
-			packageProductDependencies = (
-			);
-			productName = "ParaphraserAI MessagesExtension";
-			productReference = 6AAC101E2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension.appex */;
-			productType = "com.apple.product-type.app-extension.messages";
 		};
 /* End PBXNativeTarget section */
 
@@ -155,9 +90,6 @@
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					6AAC10142E3FB7FB002F4B72 = {
-						CreatedOnToolsVersion = 16.2;
-					};
-					6AAC101D2E3FB7FD002F4B72 = {
 						CreatedOnToolsVersion = 16.2;
 					};
 				};
@@ -177,7 +109,6 @@
 			projectRoot = "";
 			targets = (
 				6AAC10142E3FB7FB002F4B72 /* ParaphraserAI */,
-				6AAC101D2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -190,94 +121,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6AAC101C2E3FB7FD002F4B72 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXSourcesBuildPhase section */
-		6AAC101A2E3FB7FD002F4B72 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		6AAC10212E3FB7FD002F4B72 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6AAC101D2E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension */;
-			targetProxy = 6AAC10202E3FB7FD002F4B72 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		6AAC10302E3FB7FE002F4B72 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 39JAFX7PLG;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "ParaphraserAI MessagesExtension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = ParaphraserAI;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = pnikonowicz.ParaphraserAI;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "paraphraser.ai profile";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		6AAC10312E3FB7FE002F4B72 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 39JAFX7PLG;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "ParaphraserAI MessagesExtension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = ParaphraserAI;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = pnikonowicz.ParaphraserAI;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "paraphraser.ai profile";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		6AAC10322E3FB7FE002F4B72 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -461,15 +307,6 @@
 			buildConfigurations = (
 				6AAC10322E3FB7FE002F4B72 /* Debug */,
 				6AAC10332E3FB7FE002F4B72 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6AAC102F2E3FB7FE002F4B72 /* Build configuration list for PBXNativeTarget "ParaphraserAI MessagesExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6AAC10302E3FB7FE002F4B72 /* Debug */,
-				6AAC10312E3FB7FE002F4B72 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
