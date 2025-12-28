@@ -52,11 +52,6 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6AAC10172E3FB7FB002F4B72 /* ParaphraserAI */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ParaphraserAI;
-			sourceTree = "<group>";
-		};
 		6AAC10252E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -82,7 +77,6 @@
 		6AAC100E2E3FB7FB002F4B72 = {
 			isa = PBXGroup;
 			children = (
-				6AAC10172E3FB7FB002F4B72 /* ParaphraserAI */,
 				6AAC10252E3FB7FD002F4B72 /* ParaphraserAI MessagesExtension */,
 				6AAC10222E3FB7FD002F4B72 /* Frameworks */,
 				6AAC10162E3FB7FB002F4B72 /* Products */,
@@ -120,9 +114,6 @@
 			);
 			dependencies = (
 				6AAC10212E3FB7FD002F4B72 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				6AAC10172E3FB7FB002F4B72 /* ParaphraserAI */,
 			);
 			name = ParaphraserAI;
 			packageProductDependencies = (
